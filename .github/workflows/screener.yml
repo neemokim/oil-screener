@@ -1,0 +1,29 @@
+name: Oil Screener
+
+on:
+  schedule:
+    - cron: '0 0 * * *'  # 매일 자정 (UTC, 한국시간 +9시간 = 오전 9시)
+  workflow_dispatch:
+
+jobs:
+  screener:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v2
+    
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.9'
+    
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install gspread pandas requests beautifulsoup4
+    
+    - name: Run screener
+      run: python screener.py
+      env:
+        SHEET_ID: ${{ secrets.SHEET_ID }}
+        SHEET_NAME: "스크리닝결과"
