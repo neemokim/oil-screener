@@ -10,12 +10,12 @@ jobs:
     runs-on: ubuntu-latest
     
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v4
     
     - name: Set up Python
-      uses: actions/setup-python@v2
+      uses: actions/setup-python@v5
       with:
-        python-version: '3.9'
+        python-version: '3.11'
     
     - name: Install dependencies
       run: |
@@ -27,3 +27,11 @@ jobs:
       env:
         SHEET_ID: ${{ secrets.SHEET_ID }}
         SHEET_NAME: "스크리닝결과"
+    
+    - name: Commit and push
+      run: |
+        git config user.email "action@github.com"
+        git config user.name "GitHub Action"
+        git add data.csv
+        git commit -m "Update screener - $(date)" || echo "No changes"
+        git push
